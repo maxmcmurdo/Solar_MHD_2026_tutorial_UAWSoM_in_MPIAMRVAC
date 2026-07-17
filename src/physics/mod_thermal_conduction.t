@@ -325,40 +325,33 @@ contains
 
     wres(ixO^S,fl%e_)=qd(ixO^S)
 
-    !do ix1 = ixImin1,ixImin1+1
-    !  if (x(ix1,1) < 1.00015d0) then
-    !    wres(ix1,fl%e_) = wres(ixOmin1,fl%e_)
+    !do ix1 = ixImin1,ixImax1
+    !  if (abs(wres(ix1,fl%e_)) > 10.d0) then
+        !if (mype == 7) then      
+        !  write(*,*) "it                 = ", it
+        !  write(*,*) "TC turned off at x = ", x(ix1,1)
+        !  write(*,*) "TC value was       = ", wres(ix1,fl%e_)
+        !end if
+    !    wres(ix1,fl%e_) = 0.d0
     !  end if 
     !end do
 
-    !do ix1 = ixImax1-1,ixImax1
-    !  if (x(ix1,1) > 1.14334d0) then
-    !    wres(ix1,fl%e_) = wres(ixOmax1,fl%e_)
+    !if (mod(it,5000) == 0 .and. mype == 0) then
+    !  write(*,*) "max TC first block = ", maxval(wres(ixO^S,fl%e_))
+    !  write(*,*) "min TC first block = ", minval(wres(ixO^S,fl%e_))
+    !end if
+
+    !if (mod(it,5000) == 0 .and. mype == 7) then
+    !  write(*,*) "max TC last block = ", maxval(wres(ixO^S,fl%e_))
+    !  write(*,*) "min TC last block = ", minval(wres(ixO^S,fl%e_))
+    !end if
+
+    !do ix1 = ixOmin1,ixOmax1
+    !  if (abs(wres(ix1,fl%e_)) > 1.d0) then
+    !    wres(ix1,fl%e_) = 0.d0
     !  end if
     !end do
 
-    do ix1 = ixImin1,ixImax1
-      if (abs(wres(ix1,fl%e_)) > 25.d0) then
-        !if (mype == 7) then      
-          write(*,*) "it                 = ", it
-          write(*,*) "TC turned off at x = ", x(ix1,1)
-          write(*,*) "TC value was       = ", wres(ix1,fl%e_)
-        !end if
-        wres(ix1,fl%e_) = 0.d0
-      end if 
-    end do
-
-    !if (mod(it,1000) == 0 .and. mype==0) then
-    !  write(*,*) "mype = ", mype
-    !  write(*,*) "TC : ", wres(ixImin1:ixImin1+5,fl%e_)
-    !  write(*,*) "TC : ", wres(ixImax1-5:ixImax1,fl%e_)
-    !end if
-
-    !if (mod(it,1000) == 0 .and. mype==7) then
-    !  write(*,*) "mype = ", mype
-    !  write(*,*) "TC : ", wres(ixImin1:ixImin1+5,fl%e_)
-    !  write(*,*) "TC : ", wres(ixImax1-5:ixImax1,fl%e_)
-    !end if
 
   end subroutine sts_set_source_tc_mhd
 

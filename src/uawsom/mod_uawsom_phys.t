@@ -128,15 +128,7 @@ module mod_uawsom_phys
   !> Indices of the magnetic field
   integer, allocatable, public, protected :: mag(:)
 
-  !> Index of wminus
-  !integer, public, protected              :: wminus_
-
-  !> Index of wplus
-  !integer, public, protected              :: wplus_
-
-  ! -------------------Adding AWs to UAWSOM---------------------------
-  ! Max: Requires distinction between kink and Alfven waves
-
+  ! -------------------Adding AWs and kink waves to UAWSOM---------------------------
   !> Index of wkminus
   integer, public, protected              :: wkminus_
 
@@ -148,9 +140,6 @@ module mod_uawsom_phys
 
   !> Index of wAplus
   integer, public, protected              :: wAplus_
-
-  ! --------------Back to original mod_uawsom_phys----------------------
-
 
   !> Indices of the GLM psi
   integer, public, protected :: psi_
@@ -648,67 +637,67 @@ contains
       end if
     end if
 
-    phys_get_dt              => uawsom_get_dt
-    phys_get_cmax            => uawsom_get_cmax_origin
-    phys_get_a2max           => uawsom_get_a2max
-    phys_get_tcutoff         => uawsom_get_tcutoff
-    phys_get_H_speed         => uawsom_get_H_speed
+    phys_get_dt                     => uawsom_get_dt
+    phys_get_cmax                   => uawsom_get_cmax_origin
+    phys_get_a2max                  => uawsom_get_a2max
+    phys_get_tcutoff                => uawsom_get_tcutoff
+    phys_get_H_speed                => uawsom_get_H_speed
     if(has_equi_rho0) then
-      phys_get_cbounds         => uawsom_get_cbounds_split_rho
+      phys_get_cbounds              => uawsom_get_cbounds_split_rho
     else
-      phys_get_cbounds         => uawsom_get_cbounds
+      phys_get_cbounds              => uawsom_get_cbounds
     end if
     if(has_equi_rho0) then
-      phys_to_primitive        => uawsom_to_primitive_split_rho
-      uawsom_to_primitive         => uawsom_to_primitive_split_rho
-      phys_to_conserved        => uawsom_to_conserved_split_rho
-      uawsom_to_conserved         => uawsom_to_conserved_split_rho
+      phys_to_primitive             => uawsom_to_primitive_split_rho
+      uawsom_to_primitive           => uawsom_to_primitive_split_rho
+      phys_to_conserved             => uawsom_to_conserved_split_rho
+      uawsom_to_conserved           => uawsom_to_conserved_split_rho
     else if(uawsom_internal_e) then
-      phys_to_primitive        => uawsom_to_primitive_inte
-      uawsom_to_primitive         => uawsom_to_primitive_inte
-      phys_to_conserved        => uawsom_to_conserved_inte
-      uawsom_to_conserved         => uawsom_to_conserved_inte
+      phys_to_primitive             => uawsom_to_primitive_inte
+      uawsom_to_primitive           => uawsom_to_primitive_inte
+      phys_to_conserved             => uawsom_to_conserved_inte
+      uawsom_to_conserved           => uawsom_to_conserved_inte
     else if(uawsom_hydrodynamic_e) then
-      phys_to_primitive        => uawsom_to_primitive_hde
-      uawsom_to_primitive         => uawsom_to_primitive_hde
-      phys_to_conserved        => uawsom_to_conserved_hde
-      uawsom_to_conserved         => uawsom_to_conserved_hde
+      phys_to_primitive             => uawsom_to_primitive_hde
+      uawsom_to_primitive           => uawsom_to_primitive_hde
+      phys_to_conserved             => uawsom_to_conserved_hde
+      uawsom_to_conserved           => uawsom_to_conserved_hde
     else
-      phys_to_primitive        => uawsom_to_primitive_origin
-      uawsom_to_primitive         => uawsom_to_primitive_origin
-      phys_to_conserved        => uawsom_to_conserved_origin
-      uawsom_to_conserved         => uawsom_to_conserved_origin
+      phys_to_primitive             => uawsom_to_primitive_origin
+      uawsom_to_primitive           => uawsom_to_primitive_origin
+      phys_to_conserved             => uawsom_to_conserved_origin
+      uawsom_to_conserved           => uawsom_to_conserved_origin
     end if
       if(B0field.or.has_equi_rho0.or.has_equi_pe0) then
-        phys_get_flux            => uawsom_get_flux_split
+        phys_get_flux               => uawsom_get_flux_split
       else if(uawsom_hydrodynamic_e) then
-        phys_get_flux            => uawsom_get_flux_split
+        phys_get_flux               => uawsom_get_flux_split
       else
-        phys_get_flux            => uawsom_get_flux
+        phys_get_flux               => uawsom_get_flux
       end if
     if(uawsom_boris_simplification) then
-      phys_get_v                 => uawsom_get_v_boris
+      phys_get_v                    => uawsom_get_v_boris
       uawsom_get_v                  => uawsom_get_v_boris
       uawsom_kin_en                 => uawsom_kin_en_boris
     else
-      phys_get_v                 => uawsom_get_v_origin
+      phys_get_v                    => uawsom_get_v_origin
       uawsom_get_v                  => uawsom_get_v_origin
       uawsom_kin_en                 => uawsom_kin_en_origin
     end if
     if(B0field.or.has_equi_rho0) then
-      phys_add_source_geom     => uawsom_add_source_geom_split
+      phys_add_source_geom          => uawsom_add_source_geom_split
     else
-      phys_add_source_geom     => uawsom_add_source_geom
+      phys_add_source_geom          => uawsom_add_source_geom
     end if
-    phys_add_source          => uawsom_add_source
-    phys_check_params        => uawsom_check_params
-    phys_write_info          => uawsom_write_info
-    phys_angmomfix           => uawsom_angmomfix
-    phys_handle_small_values => uawsom_handle_small_values_origin
-    uawsom_handle_small_values  => uawsom_handle_small_values_origin
-    phys_check_w             => uawsom_check_w_origin
-    phys_get_pthermal        => uawsom_get_pthermal_origin
-    uawsom_get_pthermal         => uawsom_get_pthermal_origin
+    phys_add_source                 => uawsom_add_source
+    phys_check_params               => uawsom_check_params
+    phys_write_info                 => uawsom_write_info
+    phys_angmomfix                  => uawsom_angmomfix
+    phys_handle_small_values        => uawsom_handle_small_values_origin
+    uawsom_handle_small_values      => uawsom_handle_small_values_origin
+    phys_check_w                    => uawsom_check_w_origin
+    phys_get_pthermal               => uawsom_get_pthermal_origin
+    uawsom_get_pthermal             => uawsom_get_pthermal_origin
     if(number_equi_vars>0) then
       phys_set_equi_vars => set_equi_vars_grid
     endif
@@ -775,6 +764,8 @@ contains
       end if
       if(uawsom_solve_eaux) then
         call set_conversion_methods_to_head(uawsom_e_to_ei_aux, uawsom_ei_to_e_aux)
+      !else if(uawsom_hydrodynamic_e) then                                           !> Missed from carry over from mhd_phys
+      !  call set_conversion_methods_to_head(uawsom_e_to_ei_hde, uawsom_ei_to_e_hde) !> these two lines
       else if(.not. uawsom_internal_e) then
         call set_conversion_methods_to_head(uawsom_e_to_ei, uawsom_ei_to_e)
       end if
@@ -1265,7 +1256,7 @@ contains
               uawsom_kin_en(w,ixI^L,ixO^L)-&
               uawsom_mag_en(w,ixI^L,ixO^L)-&
               uawsom_wk_en(w,ixI^L,ixO^L)-&
-              uawsom_wA_en(w,ixI^L,ixO^L) ! Max: Added AW energy
+              uawsom_wA_en(w,ixI^L,ixO^L) ! Max: Added AW + kink
           if(has_equi_pe0) then
             tmp(ixO^S) = tmp(ixO^S)+block%equi_vars(ixO^S,equi_pe0_,0)*inv_gamma_1
           endif
@@ -1319,7 +1310,7 @@ contains
                  +half*sum(w(ixO^S,mom(:))**2,dim=ndim+1)*w(ixO^S,rho_)&
                  +uawsom_mag_en(w, ixI^L, ixO^L)&
                  +uawsom_wk_en(w, ixI^L, ixO^L)&
-                 +uawsom_wA_en(w, ixI^L, ixO^L) ! Max: Added AW energy 
+                 +uawsom_wA_en(w, ixI^L, ixO^L) ! Max: Added AW + kink 
       if(uawsom_solve_eaux) w(ixO^S,eaux_)=w(ixO^S,paux_)*inv_gamma_1
     end if
  
@@ -1353,7 +1344,7 @@ contains
     ! Calculate total energy from pressure, kinetic and magnetic energy 
     if(uawsom_energy) then
       w(ixO^S,e_)=w(ixO^S,p_)*inv_gamma_1&
-                 +half*sum(w(ixO^S,mom(:))**2,dim=ndim+1)*w(ixO^S,rho_) ! Max: hde so we do not consider contribution from magnetic waves AW and kink
+                 +half*sum(w(ixO^S,mom(:))**2,dim=ndim+1)*w(ixO^S,rho_)
     end if
 
     ! Convert velocity to momentum
@@ -1376,7 +1367,7 @@ contains
     !  call uawsom_handle_small_values(.true., w, x, ixI^L, ixO^L, 'uawsom_to_conserved')
     !end if
 
-    ! Calculate total energy from pressure, kinetic and magnetic energy ! Max: No kinetic energy or magnetic energy here?
+    ! Calculate total energy from pressure, kinetic and magnetic energy
     if(uawsom_energy) then
       w(ixO^S,e_)=w(ixO^S,p_)*inv_gamma_1
     end if
@@ -1418,7 +1409,7 @@ contains
                    +half*sum(w(ixO^S,mom(:))**2,dim=ndim+1)*rho(ixO^S)&
                    +uawsom_mag_en(w, ixI^L, ixO^L)&
                    +uawsom_wk_en(w,ixI^L, ixO^L)&
-                   +uawsom_wA_en(w,ixI^L, ixO^L) ! Max: Added AW energy
+                   +uawsom_wA_en(w,ixI^L, ixO^L) ! Max: Added AW + kink
         if(uawsom_solve_eaux) w(ixO^S,eaux_)=w(ixO^S,paux_)*inv_gamma_1
       end if
     end if
@@ -1446,13 +1437,13 @@ contains
 
     inv_rho(ixO^S) = 1d0/w(ixO^S,rho_)
 
-    ! Calculate pressure = (gamma-1) * (e-ek-eb) ! Max: In Norberts work it was (gamma-1) * (e-ek-eb - E_kink) since he included kink energy, 
+    ! Calculate pressure = (gamma-1) * (e-ek-eb) 
     if(uawsom_energy) then
       w(ixO^S,p_)=gamma_1*(w(ixO^S,e_)&
                   -uawsom_kin_en(w,ixI^L,ixO^L,inv_rho)&
                   -uawsom_mag_en(w,ixI^L,ixO^L)&
                   -uawsom_wk_en(w,ixI^L,ixO^L)&
-                  -uawsom_wA_en(w,ixI^L,ixO^L)) ! Max: AW energy added
+                  -uawsom_wA_en(w,ixI^L,ixO^L)) ! Max: Added AW + kink
       if(uawsom_solve_eaux) w(ixO^S,paux_)=w(ixO^S,eaux_)*gamma_1
     end if
 
@@ -1562,7 +1553,7 @@ contains
                     -uawsom_kin_en(w,ixI^L,ixO^L,inv_rho)&
                     -uawsom_mag_en(w,ixI^L,ixO^L)&
                     -uawsom_wk_en(w,ixI^L,ixO^L)&
-                    -uawsom_wA_en(w,ixI^L,ixO^L)) ! Max: AW energy added
+                    -uawsom_wA_en(w,ixI^L,ixO^L)) ! Max: Added AW + kink
         if(uawsom_solve_eaux) w(ixO^S,paux_)=w(ixO^S,eaux_)*gamma_1
       end if
     end if
@@ -1586,7 +1577,7 @@ contains
                +uawsom_kin_en(w,ixI^L,ixI^L)&
                +uawsom_mag_en(w,ixI^L,ixI^L)&
                +uawsom_wk_en(w,ixI^L,ixI^L)&
-               +uawsom_wA_en(w,ixI^L,ixI^L) ! Max: Added AW energy density
+               +uawsom_wA_en(w,ixI^L,ixI^L) ! Max: Added AW + kink
 
   end subroutine uawsom_ei_to_e
 
@@ -1602,7 +1593,7 @@ contains
                 -uawsom_kin_en(w,ixI^L,ixI^L)&
                 -uawsom_mag_en(w,ixI^L,ixI^L)&
                 -uawsom_wk_en(w,ixI^L,ixI^L)&
-                -uawsom_wA_en(w,ixI^L,ixI^L) ! Max: Added AW energy
+                -uawsom_wA_en(w,ixI^L,ixI^L) ! Max: Added AW + kink
 
     if(fix_small_values) then
       call uawsom_handle_small_ei(w,x,ixI^L,ixI^L,e_,'uawsom_e_to_ei')
@@ -1634,7 +1625,7 @@ contains
     double precision, intent(in)    :: x(ixI^S, 1:ndim)
  
     w(ixI^S,eaux_)=w(ixI^S,e_)
-    ! Calculate total energy from internal, kinetic and magnetic energy ! Max: Do we need Kink and AW energy here?
+    ! Calculate total energy from internal, kinetic and magnetic energy 
     w(ixI^S,e_)=w(ixI^S,e_)&
                +uawsom_kin_en(w,ixI^L,ixI^L)&
                +uawsom_mag_en(w,ixI^L,ixI^L)
@@ -1711,7 +1702,7 @@ contains
                    uawsom_kin_en(w,ixI^L,ixO^L)+&
                    uawsom_mag_en(w,ixI^L,ixO^L)+&
                    uawsom_wk_en(w,ixI^L,ixO^L)+&
-                   uawsom_wA_en(w,ixI^L,ixO^L) ! Max: Added AW energy
+                   uawsom_wA_en(w,ixI^L,ixO^L) ! Max: Added AW + kink
              end where
               if(uawsom_solve_eaux) then
                 where(flag(ixO^S,e_))
@@ -1737,7 +1728,7 @@ contains
                           -uawsom_kin_en(w,ixI^L,ixI^L)&
                           -uawsom_mag_en(w,ixI^L,ixI^L)&
                           -uawsom_wk_en(w,ixI^L,ixI^L)&
-                          -uawsom_wA_en(w,ixI^L,ixI^L) ! Max: Added AW energy 
+                          -uawsom_wA_en(w,ixI^L,ixI^L) ! Max: Added AW + Kink
             end if
             call small_values_average(ixI^L, ixO^L, w, x, flag, e_)
              ! convert back
@@ -1746,7 +1737,7 @@ contains
                           +uawsom_kin_en(w,ixI^L,ixI^L)&
                           +uawsom_mag_en(w,ixI^L,ixI^L)&
                           +uawsom_wk_en(w,ixI^L,ixI^L)&
-                          +uawsom_wA_en(w,ixI^L,ixI^L) ! Max: Added AW energy
+                          +uawsom_wA_en(w,ixI^L,ixI^L) ! Max: Added AW + Kink
             end if
             ! eaux
             if(uawsom_solve_eaux) then
@@ -1766,7 +1757,7 @@ contains
                           -uawsom_kin_en(w,ixI^L,ixO^L)&
                           -uawsom_mag_en(w,ixI^L,ixO^L)&
                           -uawsom_wk_en(w,ixI^L,ixO^L)&
-                          -uawsom_wA_en(w,ixI^L,ixO^L)) ! Max: AW energy added
+                          -uawsom_wA_en(w,ixI^L,ixO^L)) ! Max: Added AW + kink
               if(uawsom_solve_eaux) w(ixO^S,paux_)=w(ixO^S,eaux_)*gamma_1
             end if
           end if
@@ -2433,7 +2424,7 @@ contains
            - uawsom_kin_en(w,ixI^L,ixO^L)&
            - uawsom_mag_en(w,ixI^L,ixO^L)&
            - uawsom_wk_en(w,ixI^L,ixO^L)&
-           - uawsom_wA_en(w,ixI^L,ixO^L)) !  Max: AW energy added
+           - uawsom_wA_en(w,ixI^L,ixO^L)) !  Max: Added AW + kink
       end if
       if(has_equi_pe0) then
         pth(ixO^S) = pth(ixO^S) + block%equi_vars(ixO^S,equi_pe0_,b0i)
@@ -2484,7 +2475,7 @@ contains
     integer                      :: iw, ix^D
 
     if(uawsom_energy) then
-      pth(ixO^S)=gamma_1*(w(ixO^S,e_)-uawsom_kin_en(w,ixI^L,ixO^L)) !  Max: No wave energy contribution since we are considering only hydrodynamic 
+      pth(ixO^S)=gamma_1*(w(ixO^S,e_)-uawsom_kin_en(w,ixI^L,ixO^L))  
     else
       pth(ixO^S)=uawsom_adiab*w(ixO^S,rho_)**uawsom_gamma
     end if
@@ -2542,7 +2533,7 @@ contains
            - uawsom_kin_en(w,ixI^L,ixO^L)&
            - uawsom_mag_en(w,ixI^L,ixO^L)&
            - uawsom_wk_en(w,ixI^L,ixO^L))&
-           - uawsom_wA_en(w,ixI^L,ixO^L))/w(ixO^S,rho_) ! Max: added AW energy here. What is res? Res seems to be Temperature? res = P/rho = T
+           - uawsom_wA_en(w,ixI^L,ixO^L))/w(ixO^S,rho_) ! Max: added AW + Kink
   end subroutine uawsom_get_temperature_from_etot
 
   !> Calculate temperature from hydrodynamic energy
@@ -2653,7 +2644,7 @@ contains
     double precision, intent(in) :: x(ixI^S,1:ndim)
     double precision,intent(out) :: f(ixI^S,nwflux)
 
-    double precision             :: ptotal(ixO^S)
+    double precision             :: ptotal(ixO^S), denom(ixO^S)
     double precision             :: tmp(ixI^S), zeta(ixI^S)
     double precision             :: vHall(ixI^S,1:ndir)
     integer                      :: idirmin, iw, idir, jdir, kdir
@@ -2668,7 +2659,7 @@ contains
     if(uawsom_energy) then 
       ptotal(ixO^S)=w(ixO^S,p_)+0.5d0*sum(w(ixO^S,mag(:))**2,dim=ndim+1)+&
                                 (zeta(ixO^S)+1.d0)*(w(ixO^S,wkplus_) + w(ixO^S,wkminus_))/4.d0+&
-                                (w(ixO^S,wAplus_) + w(ixO^S,wAminus_))/2.0d0 ! Max: Added AW pressure
+                                (w(ixO^S,wAplus_) + w(ixO^S,wAminus_))/2.0d0 ! Max: Added AW + Kink pressure
     else
       ptotal(ixO^S)=uawsom_adiab*w(ixO^S,rho_)**uawsom_gamma+0.5d0*sum(w(ixO^S,mag(:))**2,dim=ndim+1)
     end if
@@ -2699,12 +2690,12 @@ contains
     if(uawsom_energy) then
       if (uawsom_internal_e) then
          f(ixO^S,e_)=w(ixO^S,mom(idim))*wC(ixO^S,e_)
-         ! Max: Adding AW to flux of energy. Note: mu (magnetic permeability) = 1 in cgs so does not appear here           
+         ! Max: Adding AW + Kink to flux of energy. Note: mu (magnetic permeability) = 1 in cgs so does not appear here           
       else
-        f(ixO^S,e_)=w(ixO^S,mom(idim))*(wC(ixO^S,e_)+ptotal(ixO^S))&  
+        f(ixO^S,e_)=w(ixO^S,mom(idim))*(wC(ixO^S,e_)+ptotal(ixO^S))&
            -w(ixO^S,mag(idim))*sum(w(ixO^S,mag(:))*w(ixO^S,mom(:)),dim=ndim+1)+&
-            w(ixO^S,wkminus_)*(w(ixO^S,mom(idim)) + w(ixO^S,mag(idim))/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.0d0)**0.5d0)+&
-            w(ixO^S,wkplus_)*(w(ixO^S,mom(idim)) - w(ixO^S,mag(idim))/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.0d0)**0.5d0)+&
+            w(ixO^S,wkminus_)*(w(ixO^S,mom(idim)) + w(ixO^S,mag(idim))/(w(ixO^S,rho_)*((zeta(ixO^S)+1.d0)/(2.d0*(1+ff*zeta(ixO^S)-ff))))**0.5d0)+&
+            w(ixO^S,wkplus_)*(w(ixO^S,mom(idim)) - w(ixO^S,mag(idim))/(w(ixO^S,rho_)*((zeta(ixO^S)+1.d0)/(2.d0*(1+ff*zeta(ixO^S)-ff))))**0.5d0)+&
             w(ixO^S,wAminus_)*(w(ixO^S,mom(idim)) + w(ixO^S,mag(idim))/(w(ixO^S,rho_)**0.5d0))+&
             w(ixO^S,wAplus_)*(w(ixO^S,mom(idim)) - w(ixO^S,mag(idim))/(w(ixO^S,rho_)**0.5d0))
 
@@ -2739,19 +2730,26 @@ contains
         end if
       end if
     end do
+   
+    denom(ixO^S) = sqrt(w(ixO^S,rho_)*((zeta(ixO^S)+1.d0)/(2.d0*(1+ff*zeta(ixO^S)-ff))))
+    
+    ! compute flux of wkminus Q+wkminus/
+    !f(ixO^S,wkminus_)= w(ixO^S,wkminus_)*(w(ixO^S,mom(idim))+w(ixO^S,mag(idim))/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0)
 
-    ! compute flux of wkminus Q+wkminus
-    f(ixO^S,wkminus_)= w(ixO^S,wkminus_)*(w(ixO^S,mom(idim)) + w(ixO^S,mag(idim))/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0)
+    !> test 1 MAX TODO TEST: Below assumes the influence of ff non-negligible on flux but ff = 0 recovers above flux calculation
+    f(ixO^S,wkminus_)= w(ixO^S,wkminus_)*(w(ixO^S,mom(idim))+w(ixO^S,mag(idim))/denom(ixO^S))
 
     ! compute flux of wkplus Q-wkplus 
-    f(ixO^S,wkplus_)= w(ixO^S,wkplus_)*(w(ixO^S,mom(idim)) - w(ixO^S,mag(idim))/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0)
-                              
+    !f(ixO^S,wkplus_)= w(ixO^S,wkplus_)*(w(ixO^S,mom(idim))-w(ixO^S,mag(idim))/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0)
+
+    !> test 1 MAX TODO TEST: Below assumes the influence of ff non-negligible
+    f(ixO^S,wkplus_)= w(ixO^S,wkplus_)*(w(ixO^S,mom(idim))-w(ixO^S,mag(idim))/denom(ixO^S))
                       
     ! Max: compute flux of wAminus  Z+wAminus
-    f(ixO^S,wAminus_)= w(ixO^S,wAminus_)*(w(ixO^S,mom(idim)) + w(ixO^S,mag(idim))/(w(ixO^S,rho_)**0.5d0))
+    f(ixO^S,wAminus_)= w(ixO^S,wAminus_)*(w(ixO^S,mom(idim))+w(ixO^S,mag(idim))/(w(ixO^S,rho_)**0.5d0))
 
     ! Max: compute flux of wAplus Z-wAplus
-    f(ixO^S,wAplus_)= w(ixO^S,wAplus_)*(w(ixO^S,mom(idim)) - w(ixO^S,mag(idim))/(w(ixO^S,rho_)**0.5d0))
+    f(ixO^S,wAplus_)= w(ixO^S,wAplus_)*(w(ixO^S,mom(idim))-w(ixO^S,mag(idim))/(w(ixO^S,rho_)**0.5d0))
 
     if (uawsom_glm) then
       !f_i[psi]=Ch^2*b_{i} Eq. 24e and Eq. 38c Dedner et al 2002 JCP, 175, 645
@@ -2816,7 +2814,7 @@ contains
     integer                      :: idirmin, iw, idir, jdir, kdir
     double precision, allocatable, dimension(:^D&,:) :: Jambi, btot
     double precision, allocatable, dimension(:^D&) :: tmp2, tmp3
-    double precision :: tmp4(ixO^S)
+    double precision :: tmp4(ixO^S), denom(ixO^S)
 
 
     call uawsom_get_rho(w,x,ixI^L,ixO^L,tmp)
@@ -2847,7 +2845,7 @@ contains
 
     ptotal(ixO^S)=pgas(ixO^S)+0.5d0*sum(w(ixO^S,mag(:))**2,dim=ndim+1)+&
                                 (zeta(ixO^S)+1.d0)*(w(ixO^S,wkplus_) + w(ixO^S,wkminus_))/4.d0+&
-                                (w(ixO^S,wAplus_) + w(ixO^S,wAminus_))/2.d0 ! Max: added AW pressure
+                                (w(ixO^S,wAplus_) + w(ixO^S,wAminus_))/2.d0 ! Max: added AW + kink pressure
 
     ! Get flux of tracer
     do iw=1,uawsom_n_tracer
@@ -2882,16 +2880,16 @@ contains
 
     ! Get flux of energy
     ! f_i[e]=v_i*e+v_i*ptotal-b_i*(b_k*v_k) ! Max: Eqn 78 TVD 2024, inside divergence ie div((rho*v^2/2 + p/gamma-1 + B^2/2mu)v - B*v.B/mu)
-    !                                       ! Max: Norbert has also added wplus and wminus (Kink waves) as well to this equation-terms in Eqn 78.
+    !                                       
     ! Max: This subtraction in the flux calculation a few lines down is because wkplus carries wave energy into the Sun
     if(uawsom_energy) then
       if (uawsom_internal_e) then
          f(ixO^S,e_)=w(ixO^S,mom(idim))*wC(ixO^S,e_)
       else
          f(ixO^S,e_)=w(ixO^S,mom(idim))*(wC(ixO^S,e_)+ptotal(ixO^S))&
-           -B(ixO^S,idim)*sum(w(ixO^S,mag(:))*w(ixO^S,mom(:)),dim=ndim+1)+&
-            w(ixO^S,wkminus_)*B(ixO^S,idim)/((w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0) -&  
-            w(ixO^S,wkplus_)*B(ixO^S,idim)/((w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0) +& 
+           -B(ixO^S,idim)*sum(w(ixO^S,mag(:))*w(ixO^S,mom(:)),dim=ndim+1)+&                
+            w(ixO^S,wkminus_)*B(ixO^S,idim)/((w(ixO^S,rho_)*((zeta(ixO^S)+1.d0)/(2.d0*(1+ff*zeta(ixO^S)-ff))))**0.5d0) -&
+            w(ixO^S,wkplus_)*B(ixO^S,idim)/((w(ixO^S,rho_)*((zeta(ixO^S)+1.d0)/(2.d0*(1+ff*zeta(ixO^S)-ff))))**0.5d0) +& 
             w(ixO^S,wAminus_)*B(ixO^S,idim)/(w(ixO^S,rho_)**0.5d0) -&                          
             w(ixO^S,wAplus_)*B(ixO^S,idim)/(w(ixO^S,rho_)**0.5d0)
 
@@ -2936,17 +2934,25 @@ contains
       end if
     end do
      
+    denom(ixO^S) = sqrt(w(ixO^S,rho_)*((zeta(ixO^S)+1.d0)/(2.d0*(1+ff*zeta(ixO^S)-ff))))
+
     ! compute flux of wkminus
-    f(ixO^S,wkminus_)= w(ixO^S,wkminus_)*(w(ixO^S,mom(idim)) + B(ixO^S,idim)/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0)
+    !f(ixO^S,wkminus_)= w(ixO^S,wkminus_)*(w(ixO^S,mom(idim))+B(ixO^S,idim)/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0)
+
+    !> test 2 MAX TODO TEST: Below assumes the influence of ff non-negligible on flux but ff = 0 recovers above flux calculation
+    f(ixO^S,wkminus_)= w(ixO^S,wkminus_)*(w(ixO^S,mom(idim))+B(ixO^S,idim)/denom(ixO^S))
 
     ! compute flux of wkplus
-    f(ixO^S,wkplus_)= w(ixO^S,wkplus_)*(w(ixO^S,mom(idim)) - B(ixO^S,idim)/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0)
+    !f(ixO^S,wkplus_)= w(ixO^S,wkplus_)*(w(ixO^S,mom(idim))-B(ixO^S,idim)/(w(ixO^S,rho_)*(zeta(ixO^S)+1.d0)/2.d0)**0.5d0)
+
+    !> test 2 MAX TODO TEST: Below assumes the influence of ff non-negligible
+    f(ixO^S,wkplus_)= w(ixO^S,wkplus_)*(w(ixO^S,mom(idim))-B(ixO^S,idim)/denom(ixO^S))
 
     ! Max: compute flux of wAminus
-    f(ixO^S,wAminus_)= w(ixO^S,wAminus_)*(w(ixO^S,mom(idim)) + B(ixO^S,idim)/(w(ixO^S,rho_)**0.5d0))
+    f(ixO^S,wAminus_)= w(ixO^S,wAminus_)*(w(ixO^S,mom(idim))+B(ixO^S,idim)/(w(ixO^S,rho_)**0.5d0))
 
     ! Max: compute flux of wAplus
-    f(ixO^S,wAplus_)= w(ixO^S,wAplus_)*(w(ixO^S,mom(idim)) - B(ixO^S,idim)/(w(ixO^S,rho_)**0.5d0))
+    f(ixO^S,wAplus_)= w(ixO^S,wAplus_)*(w(ixO^S,mom(idim))-B(ixO^S,idim)/(w(ixO^S,rho_)**0.5d0))
 
     if (uawsom_glm) then
       !f_i[psi]=Ch^2*b_{i} Eq. 24e and Eq. 38c Dedner et al 2002 JCP, 175, 645
@@ -3459,8 +3465,10 @@ contains
            w,x,gravity_energy,qsourcesplit,active)
     end if
 
-    call w_add_source(qdt,ixI^L,ixO^L,wCT,&
+    if(uawsom_energy .and. .not. uawsom_internal_e) then
+      call w_add_source(qdt,ixI^L,ixO^L,wCT,&
            w,x,uawsom_energy,qsourcesplit,active)
+    end if
 
     if (uawsom_cak_force) then
       call cak_add_source(qdt,ixI^L,ixO^L,wCT,w,x,uawsom_energy,qsourcesplit,active)
@@ -3504,159 +3512,139 @@ contains
     double precision                :: Tmp(ixI^S)
     double precision, intent(in)    :: wCT(ixI^S,1:nw), x(ixI^S,1:ndim)
     double precision, intent(inout) :: w(ixI^S,1:nw)
-    logical, intent(in) :: energy,qsourcesplit
-    logical, intent(inout) :: active
-    double precision                :: v(ixI^S,1:ndir)
+    logical, intent(in)             :: energy,qsourcesplit
+    logical, intent(inout)          :: active
+    double precision                :: v(ixI^S,1:ndir), Bmag(ixI^S), B0(ixI^S,3), Bpo, Bzo, y0, kx, Bref(ixI^S,3)
     double precision                :: divv(ixI^S),Lperp(ixI^S),Lperp_AW(ixI^S),Gamma_minus(ixI^S),Gamma_plus(ixI^S),R(ixI^S),radius(ixI^S),zeta(ixI^S),pth(ixI^S),B(ixI^S,3)
-    double precision :: Bsqr(ixI^S),vA(ixI^S),gvA(ixI^S),gradvA(ixI^S),refvA(ixI^S),Bfix(ixI^S),lnvA(ixI^S),lnrho(ixI^S), gradlnvA(ixI^S) 
-    integer :: half_window, ix1, ix2
-    double precision :: smoothed_rho(ixI^S), sum_rho
+    double precision                :: vA1(ixI^S),vA2(ixI^S),vA3(ixI^S),gradvA1(ixI^S),gradvA2(ixI^S),gradvA3(ixI^S),refvA(ixI^S),lnvA1(ixI^S),lnvA2(ixI^S),lnvA3(ixI^S), gradlnvA1(ixI^S) , gradlnvA2(ixI^S) , gradlnvA3(ixI^S) 
+    double precision                :: vk1(ixI^S),vk2(ixI^S),vk3(ixI^S),gradvk1(ixI^S),gradvk2(ixI^S),gradvk3(ixI^S),refvk(ixI^S),lnvk1(ixI^S),lnvk2(ixI^S),lnvk3(ixI^S), gradlnvk1(ixI^S) , gradlnvk2(ixI^S) , gradlnvk3(ixI^S) 
+    integer                         :: ix1, ix2, ix3, idirmin
 
-    !> may use these later: ,B2(ixI^S),vA(ixI^S),gvA(ixI^S),gradvA(ixI^S),refvA(ixI^S)
-
-    !if (mod(it,1000)==0 .and. mype==0) then
-    !  write(*,*) 'qt = ', qt
-    !end if
+    double precision :: eps_small = 1.0d-30
+    double precision :: F(ixI^S), Ref(ixI^S), b_1(ixI^S), b_2(ixI^S), b_3(ixI^S), d_lnvA_1(ixI^S), d_lnvA_2(ixI^S), d_lnvA_3(ixI^S), term1(ixI^S), curlv(ixI^S,1:ndir), term2(ixI^S), Rimb(ixI^S), Rlim(ixI^S), vA(ixI^S), lnvA(ixI^S)
+    double precision :: Fk(ixI^S), Refk(ixI^S), v_1(ixI^S), v_2(ixI^S), v_3(ixI^S), d_lnvk_1(ixI^S), d_lnvk_2(ixI^S), d_lnvk_3(ixI^S), vk(ixI^S), lnvk(ixI^S), term1k(ixI^S), Rlimk(ixI^S), Rimbk(ixI^S), Bmagref(ixI^S)
 
     if(B0field) then
-      B(ixO^S,1:ndir)=w(ixO^S,mag(1:ndir))+block%B0(ixO^S,1:ndir,1)
+      B(ixI^S,1:ndir)=wCT(ixI^S,mag(1:ndir))+block%B0(ixI^S,1:ndir,0) !> Magnetic field pertubations change the radius of flux tube
     else
-      B(ixO^S,1:ndir)=w(ixO^S,mag(1:ndir))
+      B(ixI^S,1:ndir)=wCT(ixI^S,mag(1:ndir)) 
     end if
     
-    radius(ixO^S) = 1.d8/unit_length * ((Busr/unit_magneticfield)/B(ixO^S,1))**0.5d0 !Radius = R_0*(B0/B)^0.5 TVD 2025 paper uses R_0 = 1Mm (1e8 cm)
-
+    Bmag(ixI^S) = (B(ixI^S,1)**2.d0 + B(ixI^S,2)**2.d0 + B(ixI^S,3)**2.d0)**0.5d0
+    
+    !> Below works fine for 1-3D.
+    radius(ixO^S) = 1.d7/unit_length * ((Busr/unit_magneticfield)/Bmag(ixO^S))**0.5d0  !> 1d8 = 1Mm, 1d7 = 0.1Mm
+    
     if(qsourcesplit .eqv. .false.) then
       active = .true.
-    endif
-
-    call uawsom_get_v(wCT,x,ixI^L,ixI^L,v)
-    !call uawsom_get_pthermal_origin(w,x,ixI^L,ixO^L,pth)
-    !pth(ixO^S) = pth(ixO^S)/w(ixO^S,rho_)
-
-    if(slab_uniform) then
-      if(nghostcells .gt. 2) then
-        call divvector(v,ixI^L,ixO^L,divv,sixthorder=.true.)
-      else
-        call divvector(v,ixI^L,ixO^L,divv,fourthorder=.true.)
-      end if
-    else
-     call divvector(v,ixI^L,ixO^L,divv)
-    end if
-
-    call get_zeta(w,x,ixI^L,ixI^L,zeta)
-
-    !B2(ixO^S)=sum((Btotal(ixO^S,:))**2,dim=ndim+1)
-    !Bsqr(ixO^S) = B(ixO^S,1)**(2.d0)
-
-    do ix1 = ixImin1,ixImin1+1
-      B(ix1,1) = B(ixOmin1,1)
-    end do
-
-    do ix1 = ixImax1-1,ixImax1  
-      B(ix1,1) = B(ixOmax1,1)
-    end do
-
-    ! output Alfven wave speed B/sqrt(rho)
-    vA(ixI^S) = B(ixI^S,1)/dsqrt(w(ixI^S,rho_))
-
-    lnvA(ixI^S) = log(vA(ixI^S))
-    !lnrho(ixI^S) = log(w(ixI^S,rho_))
-
-    call gradient(lnvA,ixI^L,ixO^L,ndim,gradlnvA)
-    call gradient(vA,ixI^L,ixO^L,ndim,gradvA)
-    !call gradient(lnrho,ixI^L,ixO^L,ndim,gradlnrho)
-    
-    !refvA(ixO^S) = (gradvA(ixO^S)**2)/(vA(ixO^S)**2) !> Old idea has wrong units  
-
-    !Lperp(ixO^S) = dsqrt(10.d0*ff*dpi)*radius(ixO^S)*(zeta(ixO^S) + 1.d0 - ff)**(3.d0/2.d0)/((1.d0 - ff**(5.d0/2.d0))*(zeta(ixO^S) - 1.d0))
-
-    Lperp(ixO^S) = (zeta(ixO^S) + 1.d0 - ff)**(3.d0/2.d0)/(1.d0 - ff**(5.d0/2.d0))/&
-                   (zeta(ixO^S) - 1.d0)*3.1622776*(ff*dpi)**0.5d0*radius(ixO^S) !/min(pth(ixO^S),1.d0) 
-    !Lperp(ixO^S) = ((1/(radius(ixO^S)*(ff*dpi)**0.5d0))*((2.d0/5.d0)**0.5d0)*((zeta(ixO^S)-1)/2)*((1-ff**2.5d0)/(zeta(ixO^S)+1-ff)**1.5d0))**(-1.d0)
-
-    ! Max: This is the last term in Eqn. 78 TVD 2024 contribution due to AWs is zero since mu*rho*alpha**2-1 = 0
-    w(ixO^S,e_) = w(ixO^S,e_)-qdt*(zeta(ixO^S)-1.d0)/(zeta(ixO^S)+1.d0)*(zeta(ixO^S)+1.d0)*(wCT(ixO^S,wkplus_) + wCT(ixO^S,wkminus_))/4.d0*divv(ixO^S) 
-
-    !> Reflective terms have opposite signs now they are inside the qdt becayse its a -qdt so it swaps them round 
-
-    !> With reflection included
-    !w(ixO^S,wkplus_)  = w(ixO^S,wkplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wkplus_)/2.d0  + wCT(ixO^S,wkplus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) - refvA(ixO^S)*w(ixO^S,wkminus_) + refvA(ixO^S)*w(ixO^S,wkplus_))
-    !w(ixO^S,wkminus_) = w(ixO^S,wkminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wkminus_)/2.d0 + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S)+ refvA(ixO^S)*w(ixO^S,wkminus_) - refvA(ixO^S)*w(ixO^S,wkplus_))
-
-    !> TEST 25/3/2025 no reflection rho_e calculated based off filling factor and density contrast
-    w(ixO^S,wkplus_)  = w(ixO^S,wkplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wkplus_)/2.d0  + wCT(ixO^S,wkplus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S))
-    w(ixO^S,wkminus_) = w(ixO^S,wkminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wkminus_)/2.d0 + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S))
-
-    !> TEST 25/3/2025 with Gaussian reflection
-    !w(ixO^S,wkplus_)  = w(ixO^S,wkplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wkplus_)/2.d0  + wCT(ixO^S,wkplus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) - exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wkminus_) + exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wkplus_)) 
-    !w(ixO^S,wkminus_) = w(ixO^S,wkminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wkminus_)/2.d0 + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) + exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wkminus_) - exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wkplus_))
-
-    !> TEST 26/3/2025 time dependent varying Gaussian reflection MAX: Need to sort out using qt as not liking it here
-    !w(ixO^S,wkplus_)  = w(ixO^S,wkplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wkplus_)/2.d0  + wCT(ixO^S,wkplus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) - (1+tanh(qt+10))*(1-tanh(qt-2))*(exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wkminus_) - exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wkplus_)) - (1+tanh(qt-2))*(1-tanh(qt-4))*(exp(-((x(ixO^S,1)-1.08d0)/0.01)**2.d0)*w(ixO^S,wkminus_) - exp(-((x(ixO^S,1)-1.08d0)/0.01)**2.d0)*w(ixO^S,wkplus_))) 
-    !w(ixO^S,wkminus_) = w(ixO^S,wkminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wkminus_)/2.d0 + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) + (1+tanh(qt+10))*(1-tanh(qt-2))*(exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wkminus_) - exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wkplus_)) + (1+tanh(qt-2))*(1-tanh(qt-4))*(exp(-((x(ixO^S,1)-1.08d0)/0.01)**2.d0)*w(ixO^S,wkminus_) - exp(-((x(ixO^S,1)-1.08d0)/0.01)**2.d0)*w(ixO^S,wkplus_)))
-
-    !> TEST 26/3/2025 reflection rate non zero at the base of domain: Values picked to resemble somewhat the reflection rate calculated using grad(vA)^2/vA^2
-    !w(ixO^S,wkplus_)  = w(ixO^S,wkplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wkplus_)/2.d0  + wCT(ixO^S,wkplus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) - exp(-((x(ixO^S,1)-1.01d0)/0.05)**2.d0)*w(ixO^S,wkminus_) + exp(-((x(ixO^S,1)-1.01d0)/0.05)**2.d0)*w(ixO^S,wkplus_)) 
-    !w(ixO^S,wkminus_) = w(ixO^S,wkminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wkminus_)/2.d0 + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) + exp(-((x(ixO^S,1)-1.01d0)/0.05)**2.d0)*w(ixO^S,wkminus_) - exp(-((x(ixO^S,1)-1.01d0)/0.05)**2.d0)*w(ixO^S,wkplus_))
-
-    call uawsom_get_pthermal(w,x,ixI^L,ixI^L,pth)
-    Tmp(ixO^S) = pth(ixO^S)/w(ixO^S,rho_)
-
-    Lperp_AW(ixO^S) = (1/1.d8) * 1.5d5 * 1.0d2 * (Tmp(ixO^S) / B(ixO^S,1))**0.5d0 
-
-    !Lperp_AW(ixO^S) = 0.01d0*(20.0d0/B(ixO^S,1))**0.5d0 
-    Gamma_plus(ixO^S) = (2.0d0 / Lperp_AW(ixO^S)) * (w(ixO^S, wAminus_)/w(ixO^S,rho_))**0.5d0
-    Gamma_minus(ixO^S) = (2.0d0 / Lperp_AW(ixO^S)) * (w(ixO^S, wAplus_)/w(ixO^S,rho_))**0.5d0
-
-    do ix1 = ixOmin1,ixOmax1
-      !refvA(ix1) = min(vA(ix1)*gradlnvA(ix1), max(Gamma_plus(ix1),Gamma_minus(ix1)))*(max(1.d0-2.d0*sqrt(w(ix1,wAminus_)/w(ix1,wAplus_)),0.d0) - max(1.d0-2.d0*sqrt(w(ix1,wAplus_)/w(ix1,wAminus_)),0.d0))
-      !refvA(ix1) = min(vA(ix1)*gradlnvA(ix1), max(Gamma_plus(ix1),Gamma_minus(ix1))) 
-      refvA(ix1) = vA(ix1)*gradlnvA(ix1)*0.0d0 !> Note vA*grad(ln(vA)) = gradvA in 1D
-      !refvA(ix1) = (1.d0/vA(ix1))*gradvA(ix1) !> Incorrect units for equation
-      !refvA(ix1) = 1.d0
-    end do
   
-    !w(ixO^S,wAplus_)  = w(ixO^S,wAplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wAplus_)/2.0d0 + wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S)    + 0.5d0*(w(ixO^S,mom(1)) - vA(ixO^S))*gradlnvA(ixO^S)*w(ixO^S,wAplus_) - 0.5d0*(w(ixO^S,mom(1)) + vA(ixO^S))*gradlnvA(ixO^S)*w(ixO^S,wAminus_))
-    !w(ixO^S,wAminus_) = w(ixO^S,wAminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wAminus_)/2.0d0 + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S) - 0.5d0*(w(ixO^S,mom(1)) - vA(ixO^S))*gradlnvA(ixO^S)*w(ixO^S,wAplus_) + 0.5d0*(w(ixO^S,mom(1)) + vA(ixO^S))*gradlnvA(ixO^S)*w(ixO^S,wAminus_)) 
+      call uawsom_get_v(wCT,x,ixI^L,ixI^L,v)
 
-    !w(ixO^S,wAplus_)  = w(ixO^S,wAplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wAplus_)/2.0d0 + wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S) - refvA(ixO^S)*w(ixO^S,wAminus_) + refvA(ixO^S)*w(ixO^S,wAplus_))
-    !w(ixO^S,wAminus_) = w(ixO^S,wAminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wAminus_)/2.0d0 + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S) - refvA(ixO^S)*w(ixO^S,wAplus_) + refvA(ixO^S)*w(ixO^S,wAminus_))
+      if(slab_uniform) then
+        if(nghostcells .gt. 2) then
+          call divvector(v,ixI^L,ixO^L,divv,sixthorder=.true.)
+        else
+          call divvector(v,ixI^L,ixO^L,divv,fourthorder=.true.)
+        end if
+      else
+      call divvector(v,ixI^L,ixO^L,divv)
+      end if
 
-    !> Single reflection ie waves cannot be re-reflected as per VDH2014 with moving frame taken into account (large upflows increase reflection)
-    do ix1 = ixOmin1, ixOmax1 
-      w(ix1,wAminus_) = w(ix1,wAminus_) - qdt*(divv(ix1)*wCT(ix1,wAminus_)/2.0d0 + wCT(ix1,wAminus_)*Gamma_minus(ix1) + ((w(ix1,mom(1)) + vA(ix1))/vA(ix1))*refvA(ix1)*wCT(ix1,wAminus_))
-      w(ix1,wAplus_)  = w(ix1,wAplus_)  - qdt*(divv(ix1)*wCT(ix1,wAplus_)/2.0d0 + wCT(ix1,wAplus_)*Gamma_plus(ix1) - ((w(ix1,mom(1)) + vA(ix1))/vA(ix1))*refvA(ix1)*wCT(ix1,wAminus_))
-    end do
+      call get_zeta(w,x,ixI^L,ixI^L,zeta)
+      
+      Lperp(ixO^S) = (zeta(ixO^S) + 1.d0 - ff)**(3.d0/2.d0)/(1.d0 - ff**(5.d0/2.d0))/&
+                    (zeta(ixO^S) - 1.d0)*3.1622776*(ff*dpi)**0.5d0*radius(ixO^S) !/min(pth(ixO^S),1.d0) 
 
-    !w(ixO^S,wAplus_)  = w(ixO^S,wAplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wAplus_)/2.0d0 + wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S) - gradlnvA(ixO^S)*w(ixO^S,wAminus_) + gradlnvA(ixO^S)*w(ixO^S,wAplus_))
-    !w(ixO^S,wAminus_) = w(ixO^S,wAminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wAminus_)/2.0d0 + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S) - gradlnvA(ixO^S)*w(ixO^S,wAplus_) + gradlnvA(ixO^S)*w(ixO^S,wAminus_))
 
-    !w(ixO^S,wAplus_)  = w(ixO^S,wAplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wAplus_)/2.0d0 + wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S) - 0.1d0*(1+tanh(it-4d5))*refvA(ixO^S)*w(ixO^S,wAminus_) + 0.1d0*(1+tanh(it-4.d5))*refvA(ixO^S)*w(ixO^S,wAplus_))
-    !w(ixO^S,wAminus_) = w(ixO^S,wAminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wAminus_)/2.0d0 + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S) + 0.1d0*(1+tanh(it-4.d5))*refvA(ixO^S)*w(ixO^S,wAminus_) - 0.1d0*(1+tanh(it-4.d5))*refvA(ixO^S)*w(ixO^S,wAplus_)) 
+      ! Max: This is the last term in Eqn. 78 TVD 2024 contribution due to AWs is zero since mu*rho*alpha**2-1 = 0
+      w(ixO^S,e_) = w(ixO^S,e_)-qdt*(zeta(ixO^S)-1.d0)/(zeta(ixO^S)+1.d0)*(zeta(ixO^S)+1.d0)*(wCT(ixO^S,wkplus_) + wCT(ixO^S,wkminus_))/4.d0*divv(ixO^S) 
 
-    !> Reflection added inside the time step, since it is -qdt we have swapped the signs as to e.g., below where outside the qdt bracket
-    !w(ixO^S,wAplus_)  = w(ixO^S,wAplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wAplus_)/2.0d0 + wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S))! - 30.d0*exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.0d0)*w(ixO^S,wAminus_) + 30.d0*exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wAplus_))
-    !w(ixO^S,wAminus_) = w(ixO^S,wAminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wAminus_)/2.0d0 + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S))! + 30.d0*exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.0d0)*w(ixO^S,wAminus_) - 30.d0*exp(-((x(ixO^S,1)-1.04d0)/0.01)**2.d0)*w(ixO^S,wAplus_))
+      !> (1/unit_length) is required as 1.5d7 is in cm and 10^2 is taken from sqrt(B tesla) to sqrt(B Gauss) TVD+2014. Linear conversion to Gauss so no extras needed still dimensionless
+      Lperp_AW(ixO^S) = (1.5d9/unit_length)*(1.d0/Bmag(ixO^S))**0.5d0
+
+      Gamma_plus(ixO^S) =  (2.0d0 / Lperp_AW(ixO^S)) * (wCT(ixO^S, wAminus_)/wCT(ixO^S,rho_))**0.5d0
+      Gamma_minus(ixO^S) = (2.0d0 / Lperp_AW(ixO^S)) * (wCT(ixO^S, wAplus_)/wCT(ixO^S,rho_))**0.5d0
+
+      if(B0field) then
+        Bref(ixI^S,1:ndir)=wCT(ixI^S,mag(1:ndir))+block%B0(ixI^S,1:ndir,0) !> Magnetic field pertubations change the radius of flux tube
+      else
+        Bref(ixI^S,1:ndir)=wCT(ixI^S,mag(1:ndir)) 
+      end if
+
+      Bmagref(ixI^S) = (Bref(ixI^S,1)**2.d0 + Bref(ixI^S,2)**2 + Bref(ixI^S,3)**2)**0.5d0
+
+      vA(ixI^S) = Bmagref(ixI^S)/dsqrt(wCT(ixI^S,rho_))                                                        !> vA = B/sqrt(rho_avg)
+      vk(ixI^S) = Bmagref(ixI^S)/dsqrt(0.5d0*wCT(ixI^S,rho_)*(1+zeta(ixI^S))*((1+ff*zeta(ixI^S)-ff)**(-1.d0))) !> vk = B/(sqrt(rho_i+rho_e/2))
+      lnvA(ixI^S) = log(vA(ixI^S))
+      lnvk(ixI^S) = log(vk(ixI^S))
+
+      b_1(ixI^S) = Bref(ixI^S,1)/Bmagref(ixI^S)
+      b_2(ixI^S) = Bref(ixI^S,2)/Bmagref(ixI^S)
+      b_3(ixI^S) = Bref(ixI^S,3)/Bmagref(ixI^S)
+
+      call gradient(lnvA,ixI^L,ixO^L,1,d_lnvA_1)
+      call gradient(lnvA,ixI^L,ixO^L,2,d_lnvA_2)
+      call gradient(lnvA,ixI^L,ixO^L,3,d_lnvA_3)
+
+      call gradient(lnvk,ixI^L,ixO^L,1,d_lnvk_1)
+      call gradient(lnvk,ixI^L,ixO^L,2,d_lnvk_2)
+      call gradient(lnvk,ixI^L,ixO^L,3,d_lnvk_3) 
+
+      term1(ixO^S) = vA(ixO^S) * (b_1(ixO^S)*d_lnvA_1(ixO^S) + b_2*d_lnvA_2(ixO^S) + b_3*d_lnvA_3(ixO^S))
+      term1k(ixO^S) = vk(ixO^S) * (b_1(ixO^S)*d_lnvk_1(ixO^S) + b_2*d_lnvk_2(ixO^S) + b_3*d_lnvk_3(ixO^S))
+
+      !> coordinate indpendent calculation at wCT of b.curlv
+      call uawsom_get_v(wCT,x,ixI^L,ixI^L,v)
+      call curlvector(v, ixI^L, ixO^L, curlv, idirmin, 1, 3)
+      term2(ixO^S) = b_1(ixO^S)*curlv(ixO^S,1) + b_2(ixO^S)*curlv(ixO^S,2) + b_3(ixO^S)*curlv(ixO^S,3)
+      
+      Rimb(ixO^S) = sqrt(term1(ixO^S)*term1(ixO^S) + term2(ixO^S)*term2(ixO^S))
+      
+      !> You can include the field aligned vorticity as a contributor towards kink wave reflection or not
+      !> We found that this term is approximately 2-3 orders of magnitude less than the gradients in wave speed however.
+      !Rimbk(ixO^S) = sqrt(term1k(ixO^S)*term1k(ixO^S) + term2(ixO^S)*term2(ixO^S))
+      
+      Rimbk(ixO^S) = sqrt(term1k(ixO^S)*term1k(ixO^S))
+
+      Rlim(ixO^S)  = min(Rimb(ixO^S), max(Gamma_plus(ixO^S), Gamma_minus(ixO^S)))
+      Rlimk(ixO^S) = min(Rimbk(ixO^S), max(wCT(ixO^S,wkplus_)**(1.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S), wCT(ixO^S,wkminus_)**(1.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S)))
+
+      F(ixO^S)  = 0.0d0
+      Fk(ixO^S) = 0.0d0
+
+      !> Note: AWSoM equations assume w+ propagates with the field and w- against it.
+      !>       So, the wA+- will appear below the opposite to the equations in e.g., VDH2014
+      do ix2=ixOmin2,ixOmax2
+        do ix1=ixOmin1,ixOmax1
+          if (4.0d0*(wCT(ix1,ix2,wAplus_)) <= wCT(ix1,ix2,wAminus_) .and. wCT(ix1,ix2,wAminus_) > eps_small) then
+            F(ix1,ix2) = 1.0d0 - 2.0d0*sqrt( wCT(ix1,ix2,wAplus_) / wCT(ix1,ix2,wAminus_))
+          elseif (4.0d0*wCT(ix1,ix2,wAminus_) <= wCT(ix1,ix2,wAplus_) .and. wCT(ix1,ix2,wAplus_) > eps_small) then
+            F(ix1,ix2) = 2.0d0*sqrt(wCT(ix1,ix2,wAminus_) / wCT(ix1,ix2,wAplus_)) - 1.0d0
+          endif
+        end do
+      end do
+
+      do ix2=ixOmin2,ixOmax2
+        do ix1=ixOmin1,ixOmax1
+          if (4.0d0*(wCT(ix1,ix2,wkplus_)) <= wCT(ix1,ix2,wkminus_) .and. wCT(ix1,ix2,wkminus_) > eps_small) then
+            Fk(ix1,ix2) = 1.0d0 - 2.0d0*sqrt( wCT(ix1,ix2,wkplus_) / wCT(ix1,ix2,wkminus_))
+          elseif (4.0d0*wCT(ix1,ix2,wkminus_) <= wCT(ix1,ix2,wkplus_) .and. wCT(ix1,ix2,wkplus_) > eps_small) then
+            Fk(ix1,ix2) = 2.0d0*sqrt(wCT(ix1,ix2,wkminus_) / wCT(ix1,ix2,wkplus_)) - 1.0d0
+          endif
+        end do
+      end do
+
+      Ref(ixO^S) = Rlim(ixO^S) * F(ixO^S)
+      Refk(ixO^S) = Rlimk(ixO^S) * Fk(ixO^S)
+
+      w(ixO^S,wkminus_) = w(ixO^S,wkminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wkminus_)/2.d0 + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) + Refk(ixO^S)*(wCT(ixO^S,wkminus_)*wCT(ixO^S,wkplus_))**0.5d0) 
+      w(ixO^S,wkplus_)  = w(ixO^S,wkplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wkplus_)/2.d0  + wCT(ixO^S,wkplus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) - Refk(ixO^S)*(wCT(ixO^S,wkminus_)*wCT(ixO^S,wkplus_))**0.5d0) 
+
+      w(ixO^S,wAminus_) = w(ixO^S,wAminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wAminus_)/2.0d0 + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S) + Ref(ixO^S)*(wCT(ixO^S,wAminus_)*wCT(ixO^S,wAplus_))**0.5d0) 
+      w(ixO^S,wAplus_)  = w(ixO^S,wAplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wAplus_)/2.0d0 + wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S)    - Ref(ixO^S)*(wCT(ixO^S,wAminus_)*wCT(ixO^S,wAplus_))**0.5d0) 
     
-    !if (mype==0 .and. mod(it,4000) == 0) then
-    !  write(*,*) "---------------------------------------------------------"
-    !  write(*,*) "Max AW heating   = ", maxval(wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S) + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S))
-    !  write(*,*) "Min AW heating   = ", minval(wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S) + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S))
-    !  write(*,*) "Max kink heating = ", maxval(wCT(ixO^S,wkplus_)**(3.d0/2.d0)/wCT(ixO^S,rho_)**0.5d0/Lperp(ixO^S) + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/wCT(ixO^S,rho_)**0.5d0/Lperp(ixO^S))
-    !  write(*,*) "Min kink heating = ", minval(wCT(ixO^S,wkplus_)**(3.d0/2.d0)/wCT(ixO^S,rho_)**0.5d0/Lperp(ixO^S) + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/wCT(ixO^S,rho_)**0.5d0/Lperp(ixO^S))
-    !  write(*,*) "Kink wave heating MAX components: "
-    !  write(*,*) "- wCT(ixO^S,wkplus_)  = ", maxval(wCT(ixO^S,wkplus_))
-    !  write(*,*) "- wCT(ixO^S,wkminus_) = ", maxval(wCT(ixO^S,wkminus_))
-    !  write(*,*) "- wCT(ixO^S,rho_)     = ", maxval(wCT(ixO^S,rho_))
-    !  write(*,*) "- Lperp(ixO^S)        = ", maxval(Lperp(ixO^S))
-    !  write(*,*) "Alfven wave heating MAX components: "
-    !  write(*,*) "- wCT(ixO^S,wAplus_)  = ", maxval(wCT(ixO^S,wAplus_))
-    !  write(*,*) "- wCT(ixO^S,wAminus_) = ", maxval(wCT(ixO^S,wAminus_))
-    !  write(*,*) "- Gamma_plus(ixO^S)   = ", maxval(Gamma_plus(ixO^S))
-    !  write(*,*) "- Gamma_minus(ixO^S)  = ", maxval(Gamma_minus(ixO^S))
-    !end if
-
+    endif
+  
   end subroutine w_add_source
 
   !> Compute the Lorentz force (JxB)
@@ -3694,7 +3682,6 @@ contains
     double precision, intent(in)    :: qdt
     double precision, intent(in)    :: wCT(ixI^S,1:nw), x(ixI^S,1:ndim)
     double precision, intent(inout) :: w(ixI^S,1:nw)
-
     double precision                :: v(ixI^S,1:ndir),divv(ixI^S)
 
     call uawsom_get_v(wCT,x,ixI^L,ixI^L,v)
@@ -3714,7 +3701,7 @@ contains
     if(fix_small_values) then
       call uawsom_handle_small_ei(w,x,ixI^L,ixO^L,ie,'internal_energy_add_source')
     end if
-  end subroutine internal_energy_add_source
+  end subroutine internal_energy_add_source  
 
   subroutine uawsom_get_rho(w,x,ixI^L,ixO^L,rho)
     use mod_global_parameters
@@ -3736,12 +3723,9 @@ contains
     double precision, intent(in)  :: w(ixI^S,1:nw),x(ixI^S,1:ndim)
     double precision, intent(out) :: zeta(ixI^S)
     
-    !zeta(ixI^S) = zeta0*exp(-(x(ixI^S,1)-xprobmin1)/5.d0)
-    zeta(ixI^S) = (zeta0-1.d0)*exp(-(x(ixI^S,1)-xprobmin1)/5.d0)+1.d0
-    !where(zeta(ixI^S) < 1.d0)
-    !  zeta(ixI^S) = 1.d0
-    !end where
-
+    zeta(ixI^S) = (zeta0-xprobmin2)*exp(-(x(ixI^S,2)-xprobmin2)/(5.d0*6.961d10/unit_length))+1.d0 
+    !> MAX: Open field MAX TODO: Should we have a better representation for this expansion with distance along a field line rather than just height? (for 2D+)
+    
   end subroutine get_zeta
 
   !> handle small or negative internal energy
