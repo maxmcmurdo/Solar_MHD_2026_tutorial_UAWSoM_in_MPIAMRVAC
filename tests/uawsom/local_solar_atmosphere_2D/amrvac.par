@@ -44,7 +44,7 @@
 /
 
  &meshlist
-        refine_criterion = 0  !want amr? change this from 0 to 3 
+        refine_criterion = 0  !want amr? change this from 0 to 3 and refine_max_level to >1
         refine_max_level = 1  !2lvs: 250km x 250 km, 5lvls: 31.25km x 31.25km
         block_nx1        = 10
         block_nx2        = 10
@@ -71,9 +71,9 @@
          uawsom_trac = .true.
          uawsom_trac_type = 2
          uawsom_energy=.true.
-	 uawsom_solve_eaux=.false.
-	 uawsom_internal_e=.false.
-	 uawsom_hydrodynamic_e=.false.
+	     uawsom_solve_eaux=.false.
+	 	 uawsom_internal_e=.false.
+	     uawsom_hydrodynamic_e=.false.
          Busr=10.d0    !in G
          B0field=.true.
   /
