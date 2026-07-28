@@ -3565,83 +3565,83 @@ contains
       Gamma_plus(ixO^S) =  (2.0d0 / Lperp_AW(ixO^S)) * (wCT(ixO^S, wAminus_)/wCT(ixO^S,rho_))**0.5d0
       Gamma_minus(ixO^S) = (2.0d0 / Lperp_AW(ixO^S)) * (wCT(ixO^S, wAplus_)/wCT(ixO^S,rho_))**0.5d0
 
-      if(B0field) then
-        Bref(ixI^S,1:ndir)=wCT(ixI^S,mag(1:ndir))+block%B0(ixI^S,1:ndir,0) !> Magnetic field pertubations change the radius of flux tube
-      else
-        Bref(ixI^S,1:ndir)=wCT(ixI^S,mag(1:ndir)) 
-      end if
+      !if(B0field) then
+      !  Bref(ixI^S,1:ndir)=wCT(ixI^S,mag(1:ndir))+block%B0(ixI^S,1:ndir,0) !> Magnetic field pertubations change the radius of flux tube
+      !else
+      !  Bref(ixI^S,1:ndir)=wCT(ixI^S,mag(1:ndir)) 
+      !end if
 
-      Bmagref(ixI^S) = (Bref(ixI^S,1)**2.d0 + Bref(ixI^S,2)**2 + Bref(ixI^S,3)**2)**0.5d0
+      !Bmagref(ixI^S) = (Bref(ixI^S,1)**2.d0 + Bref(ixI^S,2)**2 + Bref(ixI^S,3)**2)**0.5d0
 
-      vA(ixI^S) = Bmagref(ixI^S)/dsqrt(wCT(ixI^S,rho_))                                                        !> vA = B/sqrt(rho_avg)
-      vk(ixI^S) = Bmagref(ixI^S)/dsqrt(0.5d0*wCT(ixI^S,rho_)*(1+zeta(ixI^S))*((1+ff*zeta(ixI^S)-ff)**(-1.d0))) !> vk = B/(sqrt(rho_i+rho_e/2))
-      lnvA(ixI^S) = log(vA(ixI^S))
-      lnvk(ixI^S) = log(vk(ixI^S))
+      !vA(ixI^S) = Bmagref(ixI^S)/dsqrt(wCT(ixI^S,rho_))                                                        !> vA = B/sqrt(rho_avg)
+      !vk(ixI^S) = Bmagref(ixI^S)/dsqrt(0.5d0*wCT(ixI^S,rho_)*(1+zeta(ixI^S))*((1+ff*zeta(ixI^S)-ff)**(-1.d0))) !> vk = B/(sqrt(rho_i+rho_e/2))
+      !lnvA(ixI^S) = log(vA(ixI^S))
+      !lnvk(ixI^S) = log(vk(ixI^S))
 
-      b_1(ixI^S) = Bref(ixI^S,1)/Bmagref(ixI^S)
-      b_2(ixI^S) = Bref(ixI^S,2)/Bmagref(ixI^S)
-      b_3(ixI^S) = Bref(ixI^S,3)/Bmagref(ixI^S)
+      !b_1(ixI^S) = Bref(ixI^S,1)/Bmagref(ixI^S)
+      !b_2(ixI^S) = Bref(ixI^S,2)/Bmagref(ixI^S)
+      !b_3(ixI^S) = Bref(ixI^S,3)/Bmagref(ixI^S)
 
-      call gradient(lnvA,ixI^L,ixO^L,1,d_lnvA_1)
-      call gradient(lnvA,ixI^L,ixO^L,2,d_lnvA_2)
-      call gradient(lnvA,ixI^L,ixO^L,3,d_lnvA_3)
+      !call gradient(lnvA,ixI^L,ixO^L,1,d_lnvA_1)
+      !call gradient(lnvA,ixI^L,ixO^L,2,d_lnvA_2)
+      !call gradient(lnvA,ixI^L,ixO^L,3,d_lnvA_3)
 
-      call gradient(lnvk,ixI^L,ixO^L,1,d_lnvk_1)
-      call gradient(lnvk,ixI^L,ixO^L,2,d_lnvk_2)
-      call gradient(lnvk,ixI^L,ixO^L,3,d_lnvk_3) 
+      !call gradient(lnvk,ixI^L,ixO^L,1,d_lnvk_1)
+      !call gradient(lnvk,ixI^L,ixO^L,2,d_lnvk_2)
+      !call gradient(lnvk,ixI^L,ixO^L,3,d_lnvk_3) 
 
-      term1(ixO^S) = vA(ixO^S) * (b_1(ixO^S)*d_lnvA_1(ixO^S) + b_2*d_lnvA_2(ixO^S) + b_3*d_lnvA_3(ixO^S))
-      term1k(ixO^S) = vk(ixO^S) * (b_1(ixO^S)*d_lnvk_1(ixO^S) + b_2*d_lnvk_2(ixO^S) + b_3*d_lnvk_3(ixO^S))
+      !term1(ixO^S) = vA(ixO^S) * (b_1(ixO^S)*d_lnvA_1(ixO^S) + b_2*d_lnvA_2(ixO^S) + b_3*d_lnvA_3(ixO^S))
+      !term1k(ixO^S) = vk(ixO^S) * (b_1(ixO^S)*d_lnvk_1(ixO^S) + b_2*d_lnvk_2(ixO^S) + b_3*d_lnvk_3(ixO^S))
 
       !> coordinate indpendent calculation at wCT of b.curlv
-      call uawsom_get_v(wCT,x,ixI^L,ixI^L,v)
-      call curlvector(v, ixI^L, ixO^L, curlv, idirmin, 1, 3)
-      term2(ixO^S) = b_1(ixO^S)*curlv(ixO^S,1) + b_2(ixO^S)*curlv(ixO^S,2) + b_3(ixO^S)*curlv(ixO^S,3)
+      !call uawsom_get_v(wCT,x,ixI^L,ixI^L,v)
+      !call curlvector(v, ixI^L, ixO^L, curlv, idirmin, 1, 3)
+      !term2(ixO^S) = b_1(ixO^S)*curlv(ixO^S,1) + b_2(ixO^S)*curlv(ixO^S,2) + b_3(ixO^S)*curlv(ixO^S,3)
       
-      Rimb(ixO^S) = sqrt(term1(ixO^S)*term1(ixO^S) + term2(ixO^S)*term2(ixO^S))
+      !Rimb(ixO^S) = sqrt(term1(ixO^S)*term1(ixO^S) + term2(ixO^S)*term2(ixO^S))
       
       !> You can include the field aligned vorticity as a contributor towards kink wave reflection or not
       !> We found that this term is approximately 2-3 orders of magnitude less than the gradients in wave speed however.
       !Rimbk(ixO^S) = sqrt(term1k(ixO^S)*term1k(ixO^S) + term2(ixO^S)*term2(ixO^S))
       
-      Rimbk(ixO^S) = sqrt(term1k(ixO^S)*term1k(ixO^S))
+      !Rimbk(ixO^S) = sqrt(term1k(ixO^S)*term1k(ixO^S))
 
-      Rlim(ixO^S)  = min(Rimb(ixO^S), max(Gamma_plus(ixO^S), Gamma_minus(ixO^S)))
-      Rlimk(ixO^S) = min(Rimbk(ixO^S), max(wCT(ixO^S,wkplus_)**(1.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S), wCT(ixO^S,wkminus_)**(1.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S)))
+      !Rlim(ixO^S)  = min(Rimb(ixO^S), max(Gamma_plus(ixO^S), Gamma_minus(ixO^S)))
+      !Rlimk(ixO^S) = min(Rimbk(ixO^S), max(wCT(ixO^S,wkplus_)**(1.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S), wCT(ixO^S,wkminus_)**(1.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S)))
 
-      F(ixO^S)  = 0.0d0
-      Fk(ixO^S) = 0.0d0
+      !F(ixO^S)  = 0.0d0
+      !Fk(ixO^S) = 0.0d0
 
       !> Note: AWSoM equations assume w+ propagates with the field and w- against it.
       !>       So, the wA+- will appear below the opposite to the equations in e.g., VDH2014
-      do ix2=ixOmin2,ixOmax2
-        do ix1=ixOmin1,ixOmax1
-          if (4.0d0*(wCT(ix1,ix2,wAplus_)) <= wCT(ix1,ix2,wAminus_) .and. wCT(ix1,ix2,wAminus_) > eps_small) then
-            F(ix1,ix2) = 1.0d0 - 2.0d0*sqrt( wCT(ix1,ix2,wAplus_) / wCT(ix1,ix2,wAminus_))
-          elseif (4.0d0*wCT(ix1,ix2,wAminus_) <= wCT(ix1,ix2,wAplus_) .and. wCT(ix1,ix2,wAplus_) > eps_small) then
-            F(ix1,ix2) = 2.0d0*sqrt(wCT(ix1,ix2,wAminus_) / wCT(ix1,ix2,wAplus_)) - 1.0d0
-          endif
-        end do
-      end do
+      !do ix2=ixOmin2,ixOmax2
+      !  do ix1=ixOmin1,ixOmax1
+      !    if (4.0d0*(wCT(ix1,ix2,wAplus_)) <= wCT(ix1,ix2,wAminus_) .and. wCT(ix1,ix2,wAminus_) > eps_small) then
+      !      F(ix1,ix2) = 1.0d0 - 2.0d0*sqrt( wCT(ix1,ix2,wAplus_) / wCT(ix1,ix2,wAminus_))
+      !    elseif (4.0d0*wCT(ix1,ix2,wAminus_) <= wCT(ix1,ix2,wAplus_) .and. wCT(ix1,ix2,wAplus_) > eps_small) then
+      !      F(ix1,ix2) = 2.0d0*sqrt(wCT(ix1,ix2,wAminus_) / wCT(ix1,ix2,wAplus_)) - 1.0d0
+      !    endif
+      !  end do
+      !end do
 
-      do ix2=ixOmin2,ixOmax2
-        do ix1=ixOmin1,ixOmax1
-          if (4.0d0*(wCT(ix1,ix2,wkplus_)) <= wCT(ix1,ix2,wkminus_) .and. wCT(ix1,ix2,wkminus_) > eps_small) then
-            Fk(ix1,ix2) = 1.0d0 - 2.0d0*sqrt( wCT(ix1,ix2,wkplus_) / wCT(ix1,ix2,wkminus_))
-          elseif (4.0d0*wCT(ix1,ix2,wkminus_) <= wCT(ix1,ix2,wkplus_) .and. wCT(ix1,ix2,wkplus_) > eps_small) then
-            Fk(ix1,ix2) = 2.0d0*sqrt(wCT(ix1,ix2,wkminus_) / wCT(ix1,ix2,wkplus_)) - 1.0d0
-          endif
-        end do
-      end do
+      !do ix2=ixOmin2,ixOmax2
+      !  do ix1=ixOmin1,ixOmax1
+      !    if (4.0d0*(wCT(ix1,ix2,wkplus_)) <= wCT(ix1,ix2,wkminus_) .and. wCT(ix1,ix2,wkminus_) > eps_small) then
+      !      Fk(ix1,ix2) = 1.0d0 - 2.0d0*sqrt( wCT(ix1,ix2,wkplus_) / wCT(ix1,ix2,wkminus_))
+      !    elseif (4.0d0*wCT(ix1,ix2,wkminus_) <= wCT(ix1,ix2,wkplus_) .and. wCT(ix1,ix2,wkplus_) > eps_small) then
+      !      Fk(ix1,ix2) = 2.0d0*sqrt(wCT(ix1,ix2,wkminus_) / wCT(ix1,ix2,wkplus_)) - 1.0d0
+      !    endif
+      !  end do
+      !end do
 
-      Ref(ixO^S) = Rlim(ixO^S) * F(ixO^S)
-      Refk(ixO^S) = Rlimk(ixO^S) * Fk(ixO^S)
+      !Ref(ixO^S) = Rlim(ixO^S) * F(ixO^S)
+      !Refk(ixO^S) = Rlimk(ixO^S) * Fk(ixO^S)
 
-      w(ixO^S,wkminus_) = w(ixO^S,wkminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wkminus_)/2.d0 + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) + Refk(ixO^S)*(wCT(ixO^S,wkminus_)*wCT(ixO^S,wkplus_))**0.5d0) 
-      w(ixO^S,wkplus_)  = w(ixO^S,wkplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wkplus_)/2.d0  + wCT(ixO^S,wkplus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S) - Refk(ixO^S)*(wCT(ixO^S,wkminus_)*wCT(ixO^S,wkplus_))**0.5d0) 
+      w(ixO^S,wkminus_) = w(ixO^S,wkminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wkminus_)/2.d0 + wCT(ixO^S,wkminus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S)) ! + Refk(ixO^S)*(wCT(ixO^S,wkminus_)*wCT(ixO^S,wkplus_))**0.5d0) 
+      w(ixO^S,wkplus_)  = w(ixO^S,wkplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wkplus_)/2.d0  + wCT(ixO^S,wkplus_)**(3.d0/2.d0)/(wCT(ixO^S,rho_)*(1+ff*zeta(ixO^S)-ff)**(-1.d0))**0.5d0/Lperp(ixO^S))  ! - Refk(ixO^S)*(wCT(ixO^S,wkminus_)*wCT(ixO^S,wkplus_))**0.5d0) 
 
-      w(ixO^S,wAminus_) = w(ixO^S,wAminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wAminus_)/2.0d0 + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S) + Ref(ixO^S)*(wCT(ixO^S,wAminus_)*wCT(ixO^S,wAplus_))**0.5d0) 
-      w(ixO^S,wAplus_)  = w(ixO^S,wAplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wAplus_)/2.0d0 + wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S)    - Ref(ixO^S)*(wCT(ixO^S,wAminus_)*wCT(ixO^S,wAplus_))**0.5d0) 
+      w(ixO^S,wAminus_) = w(ixO^S,wAminus_) - qdt*(divv(ixO^S)*wCT(ixO^S,wAminus_)/2.0d0 + wCT(ixO^S,wAminus_)*Gamma_minus(ixO^S)) ! + Ref(ixO^S)*(wCT(ixO^S,wAminus_)*wCT(ixO^S,wAplus_))**0.5d0) 
+      w(ixO^S,wAplus_)  = w(ixO^S,wAplus_)  - qdt*(divv(ixO^S)*wCT(ixO^S,wAplus_)/2.0d0 + wCT(ixO^S,wAplus_)*Gamma_plus(ixO^S))    !    - Ref(ixO^S)*(wCT(ixO^S,wAminus_)*wCT(ixO^S,wAplus_))**0.5d0) 
     
     endif
   
