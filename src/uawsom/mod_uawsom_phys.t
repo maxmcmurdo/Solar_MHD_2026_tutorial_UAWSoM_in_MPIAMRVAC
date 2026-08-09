@@ -3532,7 +3532,7 @@ contains
     
     Bmag(ixI^S) = (B(ixI^S,1)**2.d0 + B(ixI^S,2)**2.d0 + B(ixI^S,3)**2.d0)**0.5d0
     
-    !> Below works fine for 1-3D.
+    !> SOLAR MHD 2026: This value 1.d7 sets the radius of the fine scale unresolved threads. If you increase it to 1.d8 you wont see an unstable atmosphere.
     radius(ixO^S) = 1.d7/unit_length * ((Busr/unit_magneticfield)/Bmag(ixO^S))**0.5d0  !> 1d8 = 1Mm, 1d7 = 0.1Mm
     
     if(qsourcesplit .eqv. .false.) then
@@ -3559,11 +3559,13 @@ contains
       ! Max: This is the last term in Eqn. 78 TVD 2024 contribution due to AWs is zero since mu*rho*alpha**2-1 = 0
       w(ixO^S,e_) = w(ixO^S,e_)-qdt*(zeta(ixO^S)-1.d0)/(zeta(ixO^S)+1.d0)*(zeta(ixO^S)+1.d0)*(wCT(ixO^S,wkplus_) + wCT(ixO^S,wkminus_))/4.d0*divv(ixO^S) 
 
-      !> (1/unit_length) is required as 1.5d7 is in cm and 10^2 is taken from sqrt(B tesla) to sqrt(B Gauss) TVD+2014. Linear conversion to Gauss so no extras needed still dimensionless
       Lperp_AW(ixO^S) = (1.5d9/unit_length)*(1.d0/Bmag(ixO^S))**0.5d0
 
       Gamma_plus(ixO^S) =  (2.0d0 / Lperp_AW(ixO^S)) * (wCT(ixO^S, wAminus_)/wCT(ixO^S,rho_))**0.5d0
       Gamma_minus(ixO^S) = (2.0d0 / Lperp_AW(ixO^S)) * (wCT(ixO^S, wAplus_)/wCT(ixO^S,rho_))**0.5d0
+
+      !> SOLAR MHD 2026: If you want to include wave energy reflection, uncomment (remove) '!' symbols and recompile the code 
+      !> ALSO, remove the '!' symbols in the wave energy update at the end of lines 3643-3647
 
       !if(B0field) then
       !  Bref(ixI^S,1:ndir)=wCT(ixI^S,mag(1:ndir))+block%B0(ixI^S,1:ndir,0) !> Magnetic field pertubations change the radius of flux tube
