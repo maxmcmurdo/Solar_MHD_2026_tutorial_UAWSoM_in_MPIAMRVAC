@@ -24,7 +24,7 @@ units = dict(length_unit=(1e9, 'cm'),
              numberdensity_unit=(1e9, 'cm**-3'))
 
 #path1 = '/path_to_your_data/'
-path1 = '/path_to_your_codes_folder/codes/Solar_MHD_2026_tutorial_UAWSoM_in_MPIAMRVAC/tests/uawsom/local_solar_atmosphere_2D/radius_1d7_no_ref/data_test_wk_20/'
+path1 = '/Users/your_name/codes/Solar_MHD_2026_tutorial_UAWSoM_in_MPIAMRVAC/tests/uawsom/local_solar_atmosphere_2D/data_test/'
 
 dataset = [
     yt.load(path1 + f'2_5Dprominence_{str(n).zfill(4)}.dat',
@@ -83,10 +83,10 @@ for i, ds in enumerate(dataset):
     p.set_log((field_type, field_name), True) # Plot the data log scaled or not
     
     # It might be useful to change the limits of data plotted so the chromosphere doesn't dominate the contrast
-    p.set_zlim((field_type, field_name), 1e8, 1e11)
+    p.set_zlim((field_type, field_name), 1e0, 2.1e1)
     
     # Sometimes you may wish to have different colour labels if the cmap colour contrast doesn't work nicely
-    #if time in [1, 15, 20]:
+    #if time in [1, 37, 74]:
     #    label_color = "black"
     #else:
     #    label_color = "white"
@@ -123,7 +123,9 @@ for i, ds in enumerate(dataset):
 
 # Resize figure
 fig.set_size_inches(14, 6)
-plt.show()
+#plt.show()
+
+plt.savefig(path1 + '/fig1.png')
 
 # Save figure
 #fig.savefig(
@@ -280,8 +282,8 @@ for row, (field_type, field_name, unit_value, cmap) in enumerate(variables):
         ax.set_yticklabels(['0', '20', '40', '60', '80'])
         
 fig.set_size_inches(14, 6)
-plt.show()
-
+#plt.show()
+plt.savefig(path1 + '/fig2.png')
 
 # # Print the minimum and maximum physical velocities
 
@@ -456,8 +458,8 @@ cbar = fig.colorbar(pcm, ax=ax2)
 cbar.set_label(r"$Q_{k}$ (erg cm$^{-3}$ s$^{-1}$)", fontsize=14)
 cbar.ax.tick_params(labelsize=12)
 
-plt.show()
-
+#plt.show()
+plt.savefig(path1 + '/field_line_tracing.png')
 
 # In[ ]:
 
