@@ -24,7 +24,7 @@ units = dict(length_unit=(1e9, 'cm'),
              numberdensity_unit=(1e9, 'cm**-3'))
 
 #path1 = '/path_to_your_data/'
-path1 = '/Users/maxmcmurdo/codes/Solar_MHD_2026_tutorial_UAWSoM_in_MPIAMRVAC/tests/uawsom/local_solar_atmosphere_2D/radius_1d7_no_ref/data_test_wk_20/'
+path1 = '/path_to_your_codes_folder/codes/Solar_MHD_2026_tutorial_UAWSoM_in_MPIAMRVAC/tests/uawsom/local_solar_atmosphere_2D/radius_1d7_no_ref/data_test_wk_20/'
 
 dataset = [
     yt.load(path1 + f'2_5Dprominence_{str(n).zfill(4)}.dat',
@@ -86,7 +86,7 @@ for i, ds in enumerate(dataset):
     p.set_zlim((field_type, field_name), 1e8, 1e11)
     
     # Sometimes you may wish to have different colour labels if the cmap colour contrast doesn't work nicely
-    #if time in [1, 37, 74]:
+    #if time in [1, 15, 20]:
     #    label_color = "black"
     #else:
     #    label_color = "white"
