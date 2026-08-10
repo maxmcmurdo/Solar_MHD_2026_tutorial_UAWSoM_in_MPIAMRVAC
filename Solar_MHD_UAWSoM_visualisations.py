@@ -24,7 +24,7 @@ units = dict(length_unit=(1e9, 'cm'),
              numberdensity_unit=(1e9, 'cm**-3'))
 
 #path1 = '/path_to_your_data/'
-path1 = '/Users/maxmcmurdo/codes/Solar_MHD_2026_tutorial_UAWSoM_in_MPIAMRVAC/tests/uawsom/local_solar_atmosphere_2D/data_test_wk_20/'
+path1 = '/Users/maxmcmurdo/codes/Solar_MHD_2026_tutorial_UAWSoM_in_MPIAMRVAC/tests/uawsom/local_solar_atmosphere_2D/radius_1d7_no_ref/data_test_wk_20/'
 
 dataset = [
     yt.load(path1 + f'2_5Dprominence_{str(n).zfill(4)}.dat',
@@ -47,9 +47,9 @@ print(dataset[0].field_list)
 
 # also can plot various 'gas' quantities in dimensional units
             
-field_type = 'amrvac' # amrvac or gas only
-field_name = 'wkminus' # must match field
-unit_value = r'wkminus' # arbitrary name
+field_type = 'gas' # amrvac or gas only
+field_name = 'number_density' # must match field
+unit_value = r'n_H' # arbitrary name
 cmap = 'viridis' # colour scheme for plotting
 
 
@@ -83,7 +83,7 @@ for i, ds in enumerate(dataset):
     p.set_log((field_type, field_name), True) # Plot the data log scaled or not
     
     # It might be useful to change the limits of data plotted so the chromosphere doesn't dominate the contrast
-    p.set_zlim((field_type, field_name), 1e0, 2.1e1)
+    p.set_zlim((field_type, field_name), 1e8, 1e11)
     
     # Sometimes you may wish to have different colour labels if the cmap colour contrast doesn't work nicely
     #if time in [1, 37, 74]:
