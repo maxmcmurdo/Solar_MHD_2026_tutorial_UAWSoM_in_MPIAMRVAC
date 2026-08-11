@@ -83,7 +83,7 @@ for i, ds in enumerate(dataset):
     p.set_log((field_type, field_name), True) # Plot the data log scaled or not
     
     # It might be useful to change the limits of data plotted so the chromosphere doesn't dominate the contrast
-    p.set_zlim((field_type, field_name), 1e0, 2.1e1)
+    p.set_zlim((field_type, field_name), 1e8, 1e11)
     
     # Sometimes you may wish to have different colour labels if the cmap colour contrast doesn't work nicely
     #if time in [1, 37, 74]:
