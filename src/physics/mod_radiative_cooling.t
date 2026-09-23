@@ -1318,7 +1318,7 @@ module mod_radiative_cooling
 
       zeta0 = 5.0d0
 
-      zeta(ixI^S) = (zeta0-1.d0)*exp(-(x(ixI^S,2)-xprobmin2)/(5.d0*69.61d0))+1.d0
+      zeta(ixI^S) = (zeta0-xprobmin2)*exp(-(x(ixI^S,2)-xprobmin2)/(5.d0*6.961d10/unit_length))+1.d0 
     end subroutine get_zeta
 
     subroutine cooling_get_dt(w,ixI^L,ixO^L,dtnew,dx^D,x,fl)
